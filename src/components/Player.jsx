@@ -173,26 +173,47 @@ export function Player() {
     const audioRef = useRef()
 
     useEffect(() => {
-        isPlaying
-            ? audioRef.current.play()
-            : audioRef.current.pause()
-    }, [isPlaying])
+        const playAudio = async () => {
+            try {
+                if (isPlaying) {
+                    await audioRef.current.play();
+                } else {
+                    await audioRef.current.pause();
+                }
+            } catch (error) {
+                console.error('Error al reproducir el audio:', error);
+            }
+        };
+
+        playAudio();
+    }, [isPlaying]);
+
 
     useEffect(() => {
         audioRef.current.volume = volume
     }, [volume])
 
     useEffect(() => {
-        const { song, playlist } = currentMusic
+        const loadAndPlayAudio = async () => {
+            const { song, playlist } = currentMusic;
 
-        if (song) {
-            const src = `/music/${playlist?.id}/0${song.id}.mp3`
-            audioRef.current.src = src
-            audioRef.current.volume = volume
-            audioRef.current.play()
-        }
+            if (song) {
+                const src = `/music/${playlist?.id}/0${song.id}.mp3`;
+                audioRef.current.src = src;
+                audioRef.current.volume = volume;
 
-    }, [currentMusic])
+                try {
+                    await audioRef.current.play();
+                    console.log('Reproduciendo:', song.title);
+                } catch (error) {
+                    console.error('Error al reproducir el audio:', error);
+                }
+            }
+        };
+
+        loadAndPlayAudio();
+    }, [currentMusic]);
+
 
     const handleClick = () => {
         if (!currentMusic.song) return
