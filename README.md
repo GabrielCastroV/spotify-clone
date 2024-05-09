@@ -1,6 +1,3 @@
-# Live Demo:
-https://spotify-clone-one-ecru-45.vercel.app/
-
 
 # Astro Starter Kit: Basics
 
