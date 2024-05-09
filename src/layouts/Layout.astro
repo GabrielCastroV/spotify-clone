@@ -1,4 +1,7 @@
 ---
+import { ViewTransitions } from "astro:transitions";
+import AsideMenu from "../components/AsideMenu.astro";
+import { Player } from "../components/Player";
 interface Props {
 	title: string;
 }
@@ -15,37 +18,133 @@ const { title } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<ViewTransitions fallback="none" />
 	</head>
-	<body>
-		<slot />
+	<body class="h-full">
+		<div id="app" class="relative p-2 gap-2 h-full">
+			<aside
+				class="[grid-area:aside] flex-col md:flex overflow-hidden hidden"
+			>
+				<AsideMenu />
+			</aside>
+			<main
+				class="[grid-area:main] index-container md:bg-zinc-800 rounded-lg overflow-y-auto h-full"
+			>
+				<slot />
+			</main>
+
+			<footer class="[grid-area:player] relative h-16 py-2">
+				<Player
+					client:load
+					transition:name="media-player"
+					transition:persist
+				/>
+			</footer>
+		</div>
+		<style>
+			#app {
+				display: grid;
+				grid-template-areas:
+					"main main main"
+					"player player player";
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr auto;
+			}
+
+			@media (min-width: 768px) {
+				#app {
+					grid-template-areas:
+						"aside main main"
+						"player player player";
+					grid-template-columns: minmax(260px, 0.3fr) 1fr;
+				}
+				.index-container {
+					/* background-color: red; */
+				}
+			}
+			html {
+				background-color: black;
+				height: 100%;
+			}
+			html,
+			:root {
+				/* Estilos para Firefox */
+				scrollbar-color: rgba(255, 255, 255, 0.3)
+					rgba(255, 255, 255, 0.06);
+				scrollbar-width: thin;
+			}
+
+			/* Estilos para WebKit (Chrome, Safari, Edge) */
+			html::-webkit-scrollbar,
+			:root::-webkit-scrollbar {
+				width: 6px;
+			}
+
+			html::-webkit-scrollbar-track,
+			:root::-webkit-scrollbar-track {
+				background: rgba(255, 255, 255, 0.06);
+			}
+
+			html::-webkit-scrollbar-thumb,
+			:root::-webkit-scrollbar-thumb {
+				background-color: rgba(255, 255, 255, 0.3);
+				border-radius: 3px;
+			}
+
+			html::-webkit-scrollbar-thumb:hover,
+			:root::-webkit-scrollbar-thumb:hover {
+				background-color: rgba(255, 255, 255, 0.5);
+			}
+
+			#app::-webkit-scrollbar-thumb {
+				z-index: 100;
+			}
+		</style>
+		<style is:global>
+			html {
+				font-family: "CircularStd", system-ui, sans-serif;
+				background: #000;
+				background-size: 224px;
+			}
+			@font-face {
+				font-family: "CircularStd";
+				src: url("/fonts/CircularStd-Medium.woff2") format("woff2");
+				font-weight: 500;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			@font-face {
+				font-family: "CircularStd";
+				src: url("/fonts/CircularStd-Book.woff2") format("woff2");
+				font-weight: 400;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			@font-face {
+				font-family: "CircularStd";
+				src: url("/fonts/CircularStd-Light.woff2") format("woff2");
+				font-weight: 300;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			@font-face {
+				font-family: "CircularStd";
+				src: url("/fonts/CircularStd-Bold.woff2") format("woff2");
+				font-weight: 700;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			@font-face {
+				font-family: "CircularStd";
+				src: url("/fonts/CircularStd-Black.woff2") format("woff2");
+				font-weight: 900;
+				font-style: normal;
+				font-display: swap;
+			}
+		</style>
 	</body>
 </html>
-<style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
-</style>
