@@ -171,6 +171,7 @@ function SongControl({ audio }) {
 export function Player() {
     const { currentMusic, isPlaying, setIsPlaying, volume } = usePlayerStore(state => state)
     const audioRef = useRef()
+    const hasMusic = currentMusic?.song != null ? '' : 'translate-y-16'
 
     useEffect(() => {
         const playAudio = async () => {
@@ -244,7 +245,7 @@ export function Player() {
 
         </div>
 
-        <div className="flex md:hidden flex-col w-full">
+        <div className={`flex md:hidden flex-col w-full transition-all ease-in-out duration-500 z-10 absolute ${hasMusic}`}>
             <div className="flex gap-2 justify-between items-center mb-1" >
                 <div audio={audioRef} className="text-white lg:w-60">
 

@@ -1,5 +1,6 @@
 ---
 // import MusicsTable from "@/components/MusicsTable.astro";
+import BackButton from "../../components/BackButton.astro";
 import { CardPlayButton } from "../../components/CardPlayButton";
 import MusicsTable from "../../components/MusicsTable.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -25,6 +26,9 @@ const playListSongs = songs.filter(
         <header
             class="flex flex-col items-center md:justify-start md:flex-row gap-2 md:gap-8 md:px-6 mt-8 md:mt-12"
         >
+            <a href="/" class="md:hidden self-start px-4">
+                <BackButton />
+            </a>
             <picture class="aspect-square w-52 h-52">
                 <img
                     src={playlist?.cover}
